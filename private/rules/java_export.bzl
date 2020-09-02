@@ -90,13 +90,6 @@ def java_export(
         output_group = "maven_source",
     )
 
-    javadoc(
-        name = "%s-docs" % name,
-        deps = [
-            ":%s-project" % name,
-        ],
-    )
-
     pom_file(
         name = "%s-pom" % name,
         target = ":%s" % lib_name,
