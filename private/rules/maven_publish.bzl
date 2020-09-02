@@ -2,7 +2,6 @@ MavenPublishInfo = provider (
     fields = {
         "coordinates": "Maven coordinates for the project, which may be None",
         "pom": "Pom.xml file for metdata",
-        "javadocs": "Javadoc jar file for documentation files",
         "artifact_jar": "Jar with the code and metadata for execution",
         "source_jar": "Jar with the source code for review",
     }
@@ -41,7 +40,6 @@ def _maven_publish_impl(ctx):
             runfiles = ctx.runfiles(
                 symlinks = {
                     "artifact.jar": ctx.file.artifact_jar,
-                    "doc.jar": ctx.file.javadocs,
                     "pom.xml": ctx.file.pom,
                     "source.jar": ctx.file.source_jar,
                     "uploader": ctx.executable._uploader,
@@ -52,7 +50,6 @@ def _maven_publish_impl(ctx):
         MavenPublishInfo(
             coordinates = ctx.attr.coordinates,
             artifact_jar = ctx.file.artifact_jar,
-            javadocs = ctx.file.javadocs,
             source_jar = ctx.file.source_jar,
             pom = ctx.file.pom
         )
@@ -79,10 +76,6 @@ When signing with GPG, the current default key is used.
             mandatory = True,
         ),
         "pom": attr.label(
-            mandatory = True,
-            allow_single_file = True,
-        ),
-        "javadocs": attr.label(
             mandatory = True,
             allow_single_file = True,
         ),

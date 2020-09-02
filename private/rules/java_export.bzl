@@ -100,7 +100,6 @@ def java_export(
         name = "%s.publish" % name,
         coordinates = maven_coordinates,
         pom = "%s-pom" % name,
-        javadocs = "%s-docs" % name,
         artifact_jar = ":%s-maven-artifact" % name,
         source_jar = ":%s-maven-source" % name,
         visibility = visibility,

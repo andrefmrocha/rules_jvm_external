@@ -63,6 +63,7 @@ public class MergeJars {
     // Insertion order may matter
     Set<Path> sources = new LinkedHashSet<>();
     DuplicateEntryStrategy onDuplicate = LAST_IN_WINS;
+    String mainClass = null;
 
     for (int i = 0; i < args.length; i++) {
       switch (args[i]) {
@@ -77,6 +78,10 @@ public class MergeJars {
 
         case "--output":
           out = Paths.get(args[++i]);
+          break;
+
+        case "--main_class":
+          mainClass = args[++i];
           break;
 
         case "--sources":
@@ -163,6 +168,8 @@ public class MergeJars {
     }
 
     manifest.getMainAttributes().put(new Attributes.Name("Created-By"), "mergejars");
+    if(mainClass != null)
+      manifest.getMainAttributes().put(new Attributes.Name("Main-Class"), mainClass);
 
     Set<String> seen = new HashSet<>(Arrays.asList("META-INF/", "META-INF/MANIFEST.MF"));
 
@@ -178,14 +185,7 @@ public class MergeJars {
       jos.putNextEntry(entry);
       jos.closeEntry();
 
-      entry = new JarEntry("META-INF/MANIFEST.MF");
-      entry = resetTime(entry);
       ByteArrayOutputStream bos = new ByteArrayOutputStream();
-      manifest.write(bos);
-      entry.setSize(bos.size());
-      jos.putNextEntry(entry);
-      jos.write(bos.toByteArray());
-      jos.closeEntry();
 
       if (!allServices.isEmpty()) {
         entry = new JarEntry("META-INF/services/");

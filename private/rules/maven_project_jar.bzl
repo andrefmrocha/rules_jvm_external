@@ -19,7 +19,7 @@ def _maven_project_jar_impl(ctx):
 
     # Merge together all the binary jars
     bin_jar = ctx.actions.declare_file("%s.jar" % ctx.label.name)
-    _combine_jars(ctx, ctx.executable._singlejar, info.artifact_jars.to_list(), bin_jar)
+    _combine_jars(ctx, ctx.executable._singlejar, info.artifact_jars.to_list() + info.jars_from_maven_deps.to_list(), bin_jar)
 
     src_jar = ctx.actions.declare_file("%s-src.jar" % ctx.label.name)
     _combine_jars(ctx, ctx.executable._singlejar, info.artifact_source_jars.to_list(), src_jar)
