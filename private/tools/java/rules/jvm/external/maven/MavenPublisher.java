@@ -123,18 +123,21 @@ public class MavenPublisher {
   }
 
   private static String toSha1(byte[] toHash) {
-    return toHexS("SHA-1", toHash);
+    return toHexS("SHA-1", toHash, 40);
   }
 
   private static String toMd5(byte[] toHash) {
-    return toHexS("MD5", toHash);
+    return toHexS("MD5", toHash, 32);
   }
 
-  private static String toHexS(String algorithm, byte[] toHash) {
+  private static String toHexS(String algorithm, byte[] toHash, int size) {
     try {
       MessageDigest digest = MessageDigest.getInstance(algorithm);
       digest.update(toHash);
-      return new BigInteger(1, digest.digest()).toString(16);
+      String numChars = "%" + size + "s";
+      return String
+              .format(numChars, new BigInteger(1, digest.digest()).toString(16))
+              .replace(' ', '0');
     } catch (NoSuchAlgorithmException e) {
       throw new RuntimeException(e);
     }
